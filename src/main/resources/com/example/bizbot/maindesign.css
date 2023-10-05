@@ -1,0 +1,32 @@
+.full-bg{
+    -fx-background-color: #f4f4f4;
+}
+.nav-form{
+    -fx-background-color : linear-gradient(to bottom right, #3f8ab5, #dc93c1);
+}
+.nav-btn{
+    -fx-background-color:transparent;
+    -fx-cursor: HAND;
+    -fx-font-size: 15px;
+}
+.nav-btn:hover{
+    -fx-background-color: #3f8fe4;
+}
+.sign-out{
+    -fx-background-color:transparent;
+    -fx-cursor: HAND;
+    -fx-font-size: 15px;
+}
+.sign-out:hover{
+    -fx-background-color: #e14d4d;
+}
+.white-bg{
+    -fx-background-color: #ffffff;
+}
+.radius{
+    -fx-background-radius: 10px;
+}
+
+.number-disp{
+    -fx-background-color : linear-gradient(to bottom right, #3f8ab5, #dc93c1);
+}
