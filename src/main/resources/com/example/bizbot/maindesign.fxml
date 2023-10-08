@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bizbot.HelloController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bizbot.mainDashboard">
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
@@ -258,18 +258,25 @@
                                     </Label>
                                     <TextField layoutX="116.0" layoutY="51.0" styleClass="text_field" stylesheets="@loginui.css" />
                                     <TextField layoutX="116.0" layoutY="93.0" styleClass="text_field" stylesheets="@loginui.css" />
-                                    <TextField layoutX="116.0" layoutY="138.0" promptText="Rs." styleClass="text_field" stylesheets="@loginui.css" />
+                                    <TextField layoutX="116.0" layoutY="138.0" promptText="Rs. 0.0" styleClass="text_field" stylesheets="@loginui.css" />
                                     <TextField layoutX="387.0" layoutY="51.0" promptText="0" styleClass="text_field" stylesheets="@loginui.css" />
                                     <ComboBox layoutX="387.0" layoutY="92.0" prefWidth="150.0" promptText="Choose one" styleClass="text_field" stylesheets="@loginui.css" />
-                                    <AnchorPane layoutX="695.0" layoutY="22.0" prefHeight="157.0" prefWidth="166.0" stylesheets="@maindesign.css">
+                                    <AnchorPane layoutX="681.0" layoutY="22.0" prefHeight="158.0" prefWidth="180.0" stylesheets="@maindesign.css">
                                        <styleClass>
                                           <String fx:value="full-bg" />
                                           <String fx:value="radius" />
                                           <String fx:value="shadow" />
                                        </styleClass>
+                                       <children>
+                                          <ImageView fitHeight="155.0" fitWidth="178.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                                       </children>
                                     </AnchorPane>
                                     <Button layoutX="747.0" layoutY="190.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="74.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Import" />
-                                    <Button layoutX="117.0" layoutY="191.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="87.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Add" />
+                                    <Button layoutX="117.0" layoutY="191.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="87.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Add">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
                                     <Button layoutX="248.0" layoutY="191.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="87.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Update" />
                                     <Button layoutX="376.0" layoutY="191.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="87.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Clear" />
                                     <Button layoutX="496.0" layoutY="191.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="87.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Delete" />
