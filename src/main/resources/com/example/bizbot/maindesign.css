@@ -26,7 +26,19 @@
 .radius{
     -fx-background-radius: 10px;
 }
+.shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,3), 3,0,0,0);
+}
 
 .number-disp{
     -fx-background-color : linear-gradient(to bottom right, #3f8ab5, #dc93c1);
+}
+.font{
+    -fx-font-size: 15px;
+    -fx-font-weight: bolder;
+}
+.border{
+        -fx-border-width: 2;
+        -fx-border-color: black;
+        -fx-border-style: solid ;
 }
