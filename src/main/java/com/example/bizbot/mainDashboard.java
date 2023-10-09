@@ -90,8 +90,13 @@ public class mainDashboard implements Initializable {
     private TableView<?> inventory_tableview;
     @FXML
     private ComboBox<?> combo_status;
+    @FXML
+    private ComboBox<?> combo_sortBy;
+    @FXML
+    private AnchorPane order_display;
 
     private String[] statusList = {"Available", "Unavailable"};
+    private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};
     public void inventoryStatus(){
         //This is to add list items to the combo-box
         List<String> Inv_status = new ArrayList<>();
@@ -102,21 +107,40 @@ public class mainDashboard implements Initializable {
         combo_status.setItems(listData);
 
     }
+    public void sortby(){
+        List<String> sort_by = new ArrayList<>();
+        for(String data: sortbyList){
+            sort_by.add(data);
+        }
+        ObservableList SortData = FXCollections.observableArrayList(sort_by);
+        combo_sortBy.setItems(SortData);
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources){
         inventoryStatus();
+        sortby();
     }
-    public void switchFromDashboardtoInventory(ActionEvent event){
-        //this is to switch from dashboard to inventory page
-        if(event.getSource() == id_inventory){
-            inventory_display.setVisible(true);
-            dashboard_display.setVisible(false);
-        }
+    public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
         if(event.getSource() == id_dashboard){
             dashboard_display.setVisible(true);
             inventory_display.setVisible(false);
+            order_display.setVisible(false);
         }
-
+    }
+    public void switchToInventory(ActionEvent event){
+        //this is to switch from dashboard to inventory page
+        if(event.getSource() == id_inventory){
+            inventory_display.setVisible(true);
+            dashboard_display.setVisible(false);
+            order_display.setVisible(false);
+        }
+    }
+    public void switchToOrderList(ActionEvent event){
+        if(event.getSource()== id_order){
+            order_display.setVisible(true);
+            inventory_display.setVisible(false);
+            dashboard_display.setVisible(false);
+        }
     }
 }
