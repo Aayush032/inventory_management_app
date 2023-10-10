@@ -59,7 +59,7 @@ public class HelloController {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("maindesign.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
-            stage.setTitle("Login");
+            stage.setTitle("Bizbot Dashboard");
             stage.setScene(scene);
             stage.show();
         }

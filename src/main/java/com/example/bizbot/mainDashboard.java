@@ -94,11 +94,15 @@ public class mainDashboard implements Initializable {
     private ComboBox<?> combo_sortBy;
     @FXML
     private AnchorPane order_display;
+    @FXML
+    private AnchorPane customer_display;
+    @FXML
+    private AnchorPane report_display;
 
     private String[] statusList = {"Available", "Unavailable"};
     private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};
     public void inventoryStatus(){
-        //This is to add list items to the combo-box
+        //This is to add list items to the combo-box of the inventory section
         List<String> Inv_status = new ArrayList<>();
         for(String data: statusList){
             Inv_status.add(data);
@@ -108,6 +112,7 @@ public class mainDashboard implements Initializable {
 
     }
     public void sortby(){
+        //this is to add list to the combo-box of the order section
         List<String> sort_by = new ArrayList<>();
         for(String data: sortbyList){
             sort_by.add(data);
@@ -123,24 +128,48 @@ public class mainDashboard implements Initializable {
     public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
         if(event.getSource() == id_dashboard){
+            //when dashboard button is pressed, that anchor pane is set to visible and other sections are made invisible
             dashboard_display.setVisible(true);
             inventory_display.setVisible(false);
             order_display.setVisible(false);
+            customer_display.setVisible(false);
+            report_display.setVisible(false);
         }
     }
     public void switchToInventory(ActionEvent event){
         //this is to switch from dashboard to inventory page
         if(event.getSource() == id_inventory){
+            //when inventory button is pressed, that anchor pane is set to visible and other sections are made invisible
             inventory_display.setVisible(true);
             dashboard_display.setVisible(false);
             order_display.setVisible(false);
+            customer_display.setVisible(false);
+            report_display.setVisible(false);
         }
     }
     public void switchToOrderList(ActionEvent event){
+        //this is to switch to order section
         if(event.getSource()== id_order){
+            //when order button is pressed, that anchor pane is set to visible and other sections are made invisible
             order_display.setVisible(true);
             inventory_display.setVisible(false);
             dashboard_display.setVisible(false);
+            customer_display.setVisible(false);
+            report_display.setVisible(false);
         }
+    }
+    public void switchToCustomer(ActionEvent event){
+        customer_display.setVisible(true);
+        order_display.setVisible(false);
+        inventory_display.setVisible(false);
+        dashboard_display.setVisible(false);
+        report_display.setVisible(false);
+    }
+    public void switchToReport(ActionEvent event){
+        report_display.setVisible(true);
+        customer_display.setVisible(false);
+        order_display.setVisible(false);
+        inventory_display.setVisible(false);
+        dashboard_display.setVisible(false);
     }
 }
