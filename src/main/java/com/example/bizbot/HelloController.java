@@ -1,6 +1,8 @@
 package com.example.bizbot;
 
 import javafx.animation.TranslateTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +12,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
 
-public class HelloController {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class HelloController implements HelloControllerInterface {
     @FXML
     private Hyperlink id_forgot;
 
@@ -53,6 +61,19 @@ public class HelloController {
 
     @FXML
     private TextField su_username;
+    private Connection connect;
+    private PreparedStatement psmt;
+    private ResultSet rset;
+
+    private String [] question_list = {"What is your birth month?", "What is your favourite color?", "What is your favourite subject"};
+    public void reqQuestionList(){
+        List<String> listQ = new ArrayList<>();
+        for(String data: question_list){
+            listQ.add(data);
+        }
+        ObservableList list_data = FXCollections.observableArrayList(listQ);
+        su_combo.setItems(list_data);
+    }
     //The function below is just for testing purpose. this should be removed and replaced with db connection and user authorization
     public void Login(ActionEvent event) throws IOException {
         if(id_username.getText().equals("admin") && id_password.getText().equals("pass")){
@@ -76,6 +97,7 @@ public class HelloController {
                     (ActionEvent e)->{
                 id_ready.setVisible(true);
                 id_sidebtn.setVisible(false);
+                reqQuestionList();
             }
             );
             slider.play();
@@ -91,6 +113,10 @@ public class HelloController {
             );
             slider.play();
         }
+    }
+    @Override
+    public void initialize(URL url, ResourceBundle rb){
+
     }
 
 }
