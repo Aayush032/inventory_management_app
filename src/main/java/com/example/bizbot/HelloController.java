@@ -16,6 +16,7 @@ import java.net.URL;
 import java.sql.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -61,9 +62,39 @@ public class HelloController implements HelloControllerInterface {
 
     @FXML
     private TextField su_username;
+    @FXML
+    private TextField fp_answer;
+
+    @FXML
+    private Button fp_backBtn;
+
+    @FXML
+    private AnchorPane fp_form;
+
+    @FXML
+    private Button fp_proceedBtn;
+
+    @FXML
+    private ComboBox<?> fp_questions;
+
+    @FXML
+    private Button np_backBtn;
+
+    @FXML
+    private Button np_changeBtn;
+
+    @FXML
+    private PasswordField np_confirmationpassword;
+
+    @FXML
+    private AnchorPane np_form;
+
+    @FXML
+    private PasswordField np_newpassword;
     private Connection connect;
     private PreparedStatement psmt;
     private ResultSet rset;
+    private Alert alert;
 
     private String [] question_list = {"What is your birth month?", "What is your favourite color?", "What is your favourite subject"};
     public void reqQuestionList(){
@@ -74,20 +105,137 @@ public class HelloController implements HelloControllerInterface {
         ObservableList list_data = FXCollections.observableArrayList(listQ);
         su_combo.setItems(list_data);
     }
-    //The function below is just for testing purpose. this should be removed and replaced with db connection and user authorization
-    public void Login(ActionEvent event) throws IOException {
-        if(id_username.getText().equals("admin") && id_password.getText().equals("pass")){
-            Stage stage = new Stage();
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("maindesign.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
-            stage.setTitle("Bizbot Dashboard");
-            stage.setScene(scene);
-            stage.show();
+    public void userRegistration(){
+        if(su_username.getText().isEmpty() || su_password.getText().isEmpty() || su_combo.getSelectionModel().isEmpty() || su_answer.getText().isEmpty()){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill up the blank fields");
+            alert.showAndWait();
+        }else{
+            String reg_query = "insert into bizemployee (username, password, questions, answers, date)"+ "values (?,?,?,?,?)";
+            connect = DatabaseConnectivity.connectDb();
+            try{
+                //To check if username already exists
+                String check_username_query = "select username from bizemployee where username = '" + su_username.getText()+"'";
+                psmt = connect.prepareStatement(check_username_query);
+                rset = psmt.executeQuery();
+                if(rset.next()){
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Username already exists");
+                    alert.showAndWait();
+                }
+                //To alert the user that password is to small
+                else if (su_password.getText().length() <8) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Password too small");
+                    alert.showAndWait();
+                }
+                else{
+                    psmt = connect.prepareStatement(reg_query);
+                    psmt.setString(1,su_username.getText());
+                    psmt.setString(2,su_password.getText());
+                    psmt.setString(3,(String) su_combo.getSelectionModel().getSelectedItem());
+                    psmt.setString(4,su_answer.getText());
+
+                    //to get the date of account creation
+                    LocalDateTime currentDate = LocalDateTime.now();
+                    psmt.setString(5,String.valueOf(currentDate));
+
+                    psmt.executeUpdate();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully registered account");
+                    alert.showAndWait();
+
+                    su_username.setText("");
+                    su_password.setText("");
+                    su_combo.getSelectionModel().clearSelection();
+                    su_answer.setText("");
+
+                    //For preparing sliding
+                    TranslateTransition slider = new TranslateTransition();
+                    slider.setNode(id_sideform);
+                    slider.setToX(0);
+                    slider.setDuration(Duration.seconds(.5));
+                    slider.setOnFinished(
+                            (ActionEvent e)->{
+                                id_ready.setVisible(false);
+                                id_sidebtn.setVisible(true);
+                            }
+                    );
+                    slider.play();
+                }
+            }
+            catch (Exception e){
+                System.out.println("Error:"+e);
+            }
+
         }
     }
+    //login method for the users
+    public void loginAction(ActionEvent event) throws IOException{
+        if(id_username.getText().isEmpty() || id_username.getText().isEmpty()){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Information message");
+            alert.setHeaderText(null);
+            alert.setContentText("Username/Password error");
+            alert.showAndWait();
+        }
+        else{
+            String select_data_query = "select username, password from bizemployee where username = ? and password = ? ";
+            connect = DatabaseConnectivity.connectDb();
+            try{
+                psmt = connect.prepareStatement(select_data_query);
+                psmt.setString(1,id_username.getText());
+                psmt.setString(2,id_password.getText());
+                rset = psmt.executeQuery();
+                //if username and password exists then login is successful
+                if(rset.next()){
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Login successful");
+                    alert.showAndWait();
+                }
+                //if username and password does not exist then login is not successful
+                else{
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Username/Password error");
+                    alert.showAndWait();
+                }
+            }
+            catch (Exception e){
+                System.out.println("Error from login:"+e);
+            }
+        }
+    }
+    public void switchForgotPassword(){
+        fp_form.setVisible(true);
+        id_loginform.setVisible(false);
+    }
+    //The function below is just for testing purpose. this should be removed and replaced with db connection and user authorization
+//    public void Login(ActionEvent event) throws IOException {
+//        if(id_username.getText().equals("admin") && id_password.getText().equals("pass")){
+//            Stage stage = new Stage();
+//            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("maindesign.fxml"));
+//            Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
+//            stage.setTitle("Bizbot Dashboard");
+//            stage.setScene(scene);
+//            stage.show();
+//        }
+//    }
     public void switchForm(ActionEvent event){
         // this is for sliding animation. TranslateTransition is an inbuilt library
         TranslateTransition slider = new TranslateTransition();
+        // to display the create account form
         if(event.getSource() == id_sidebtn){
             slider.setNode(id_sideform);
             //ToX is a translation function that translates towards the x-axis
@@ -97,11 +245,16 @@ public class HelloController implements HelloControllerInterface {
                     (ActionEvent e)->{
                 id_ready.setVisible(true);
                 id_sidebtn.setVisible(false);
+                id_loginform.setVisible(true);
+                fp_form.setVisible(false);
+                np_form.setVisible(false);
                 reqQuestionList();
             }
             );
             slider.play();
-        } else if (event.getSource()== id_ready) {
+        }
+        //to display the login form
+        else if (event.getSource()== id_ready) {
             slider.setNode(id_sideform);
             slider.setToX(0);
             slider.setDuration(Duration.seconds(.5));
@@ -109,6 +262,9 @@ public class HelloController implements HelloControllerInterface {
                     (ActionEvent e)->{
                         id_ready.setVisible(false);
                         id_sidebtn.setVisible(true);
+                        id_loginform.setVisible(true);
+                        fp_form.setVisible(false);
+                        np_form.setVisible(false);
                     }
             );
             slider.play();
