@@ -98,6 +98,8 @@ public class mainDashboard implements Initializable {
     private AnchorPane customer_display;
     @FXML
     private AnchorPane report_display;
+    @FXML
+    private Label dash_username;
 
     private String[] statusList = {"Available", "Unavailable"};
     private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};

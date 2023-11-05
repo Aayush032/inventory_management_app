@@ -55,10 +55,11 @@
                         <Font name="Monotype Corsiva" size="36.0" />
                      </font>
                   </Label>
-                  <Button fx:id="fp_proceedBtn" layoutX="89.0" layoutY="212.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="35.0" prefWidth="150.0" styleClass="login_btn" stylesheets="@loginui.css" text="Proceed" />
-                  <ComboBox fx:id="fp_questions" layoutX="54.0" layoutY="117.0" prefHeight="35.0" prefWidth="220.0" promptText="Question" />
-                  <TextField fx:id="fp_answer" layoutX="54.0" layoutY="164.0" prefHeight="35.0" prefWidth="220.0" promptText="Answer" styleClass="text_field" stylesheets="@loginui.css" />
-                  <Button fx:id="fp_backBtn" layoutX="119.0" layoutY="316.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="35.0" prefWidth="76.0" styleClass="login_btn" stylesheets="@loginui.css" text="Back" />
+                  <TextField fx:id="fp_username" layoutX="54.0" layoutY="103.0" prefHeight="35.0" prefWidth="220.0" promptText="Username" styleClass="text_field" stylesheets="@loginui.css" />
+                  <ComboBox fx:id="fp_questions" layoutX="54.0" layoutY="150.0" prefHeight="35.0" prefWidth="220.0" promptText="Question" />
+                  <TextField fx:id="fp_answer" layoutX="54.0" layoutY="194.0" prefHeight="35.0" prefWidth="220.0" promptText="Answer" styleClass="text_field" stylesheets="@loginui.css" />
+                  <Button fx:id="fp_proceedBtn" layoutX="89.0" layoutY="257.0" mnemonicParsing="false" onAction="#proceedBtn" prefHeight="35.0" prefWidth="150.0" styleClass="login_btn" stylesheets="@loginui.css" text="Proceed" />
+                  <Button fx:id="fp_backBtn" layoutX="119.0" layoutY="316.0" mnemonicParsing="false" onAction="#backToLoginFormBtn" prefHeight="35.0" prefWidth="76.0" styleClass="login_btn" stylesheets="@loginui.css" text="Back" />
                   <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="130.0" layoutY="343.0" size="23" text="" />
                </children>
             </AnchorPane>
@@ -90,11 +91,11 @@
                         <Font name="Monotype Corsiva" size="36.0" />
                      </font>
                   </Label>
-                  <Button fx:id="np_changeBtn" layoutX="89.0" layoutY="212.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="35.0" prefWidth="150.0" styleClass="login_btn" stylesheets="@loginui.css" text="Change Password" />
-                  <Button fx:id="np_backBtn" layoutX="119.0" layoutY="316.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="35.0" prefWidth="76.0" styleClass="login_btn" stylesheets="@loginui.css" text="Back" />
+                  <PasswordField fx:id="np_newpassword" layoutX="45.0" layoutY="114.0" prefHeight="35.0" prefWidth="220.0" promptText="New Password" styleClass="text_field" stylesheets="@loginui.css" />
+                  <PasswordField fx:id="np_confirmationpassword" layoutX="47.0" layoutY="164.0" prefHeight="35.0" prefWidth="220.0" promptText="Confirmation Password" styleClass="text_field" stylesheets="@loginui.css" />
+                  <Button fx:id="np_changeBtn" layoutX="89.0" layoutY="212.0" mnemonicParsing="false" onAction="#changePasswordButton" prefHeight="35.0" prefWidth="150.0" styleClass="login_btn" stylesheets="@loginui.css" text="Change Password" />
+                  <Button fx:id="np_backBtn" layoutX="119.0" layoutY="316.0" mnemonicParsing="false" onAction="#backToFpFormBtn" prefHeight="35.0" prefWidth="76.0" styleClass="login_btn" stylesheets="@loginui.css" text="Back" />
                   <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="130.0" layoutY="343.0" size="23" text="" />
-                  <PasswordField fx:id="np_newpassword" layoutX="45.0" layoutY="114.0" prefHeight="35.0" prefWidth="220.0" promptText="New Password" />
-                  <PasswordField fx:id="np_confirmationpassword" layoutX="47.0" layoutY="164.0" prefHeight="35.0" prefWidth="220.0" promptText="Confirmation Password" />
                </children>
             </AnchorPane>
          </children>

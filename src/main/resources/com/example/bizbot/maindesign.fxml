@@ -79,6 +79,16 @@
                         <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" layoutX="36.0" layoutY="583.0" size="20" />
                         <FontAwesomeIconView fill="WHITE" glyphName="FILE" layoutX="40.0" layoutY="324.0" size="20" />
                         <FontAwesomeIconView fill="WHITE" glyphName="SHOPPING_CART" layoutX="36.0" layoutY="189.0" size="20" text="" />
+                        <Label layoutX="9.0" layoutY="74.0" text="Welcome,">
+                           <font>
+                              <Font name="Monotype Corsiva" size="26.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="dash_username" layoutX="104.0" layoutY="74.0">
+                           <font>
+                              <Font name="Monotype Corsiva" size="26.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                </left>
