@@ -6,13 +6,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class mainDashboard implements Initializable {
@@ -63,6 +67,8 @@ public class mainDashboard implements Initializable {
 
     @FXML
     private Button id_report;
+    @FXML
+    private Button id_signout;
 
     @FXML
     private AnchorPane inventory_display;
@@ -100,6 +106,7 @@ public class mainDashboard implements Initializable {
     private AnchorPane report_display;
     @FXML
     private Label dash_username;
+    private Alert alert;
 
     private String[] statusList = {"Available", "Unavailable"};
     private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};
@@ -108,6 +115,30 @@ public class mainDashboard implements Initializable {
         String user = data.username;
         user = user.substring(0,1).toUpperCase() + user.substring(1);
         dash_username.setText(user);
+    }
+    //method to sign out for the current user
+    public void signOutBtn(){
+        try{
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to log out?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if(option.get().equals(ButtonType.OK)){
+                //To hide the main form
+                id_signout.getScene().getWindow().hide();
+                //To move back to login menu signing out the current user
+                Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Bizbot Login");
+                stage.setScene(scene);
+                stage.show();
+            }
+        }
+        catch (Exception e){
+            System.out.println("Error"+e);
+        }
     }
     public void inventoryStatus(){
         //This is to add list items to the combo-box of the inventory section

@@ -68,7 +68,7 @@
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
                         </Button>
-                        <Button layoutY="554.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" styleClass="sign-out" stylesheets="@maindesign.css" text="Sign Out">
+                        <Button fx:id="id_signout" layoutY="554.0" mnemonicParsing="false" onAction="#signOutBtn" prefHeight="45.0" prefWidth="200.0" styleClass="sign-out" stylesheets="@maindesign.css" text="Sign Out">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
