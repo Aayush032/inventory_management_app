@@ -317,7 +317,7 @@ public class HelloController implements Initializable  {
                 if (rset.next()) {
                     //this will send the username to display in the dashboard
                     data.username = id_username.getText();
-                    //Action after Login is successful
+                    //Action after Login is  successful
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information message");
                     alert.setHeaderText(null);

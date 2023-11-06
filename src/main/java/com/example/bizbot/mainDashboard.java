@@ -9,11 +9,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,21 +39,23 @@ public class mainDashboard implements Initializable {
 
     @FXML
     private Button btn_update;
+    @FXML
+    private TableColumn<productData,String > column_date;
 
     @FXML
-    private TableColumn<?, ?> column_pID;
+    private TableColumn<productData,String > column_pID;
 
     @FXML
-    private TableColumn<?, ?> column_pName;
+    private TableColumn<productData,String > column_pName;
 
     @FXML
-    private TableColumn<?, ?> column_price;
+    private TableColumn<productData,String > column_price;
 
     @FXML
-    private TableColumn<?, ?> column_status;
+    private TableColumn<productData,String > column_status;
 
     @FXML
-    private TableColumn<?, ?> column_stock;
+    private TableColumn<productData,String > column_stock;
 
     @FXML
     private AnchorPane dashboard_form;
@@ -93,7 +100,7 @@ public class mainDashboard implements Initializable {
     private TextField text_stock;
 
     @FXML
-    private TableView<?> inventory_tableview;
+    private TableView<productData> inventory_tableview;
     @FXML
     private ComboBox<?> combo_status;
     @FXML
@@ -107,6 +114,10 @@ public class mainDashboard implements Initializable {
     @FXML
     private Label dash_username;
     private Alert alert;
+    private Connection connect;
+    private PreparedStatement psmt;
+    private Statement smt;
+    private ResultSet rset;
 
     private String[] statusList = {"Available", "Unavailable"};
     private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};
@@ -159,11 +170,44 @@ public class mainDashboard implements Initializable {
         ObservableList SortData = FXCollections.observableArrayList(sort_by);
         combo_sortBy.setItems(SortData);
     }
+    public ObservableList<productData> inventoryData(){
+        ObservableList<productData> data_list = FXCollections.observableArrayList();
+        String select_product_query = "select * from product";
+        connect = DatabaseConnectivity.connectDb();
+        try{
+            psmt = connect.prepareStatement(select_product_query);
+            rset = psmt.executeQuery();
+            productData prod_data;
+            while(rset.next()){
+                prod_data = new productData(rset.getInt("id"), rset.getString("product_id"),
+                        rset.getString("product_name"), rset.getDouble("price"),
+                        rset.getString("status"), rset.getString("image"),
+                        rset.getDate("date"),rset.getInt("stock"));
+                data_list.add(prod_data);
+            }
+        }
+        catch (Exception e){
+            System.out.println("Error:"+e);
+        }
+        return data_list;
+    }
+    private ObservableList<productData> inventoryListData;
+    public void inventoryShowData(){
+        inventoryListData = inventoryData();
+        column_pID.setCellValueFactory(new PropertyValueFactory<>("product_id"));
+        column_pName.setCellValueFactory(new PropertyValueFactory<>("product_name"));
+        column_stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        column_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        column_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        inventory_tableview.setItems(inventoryListData);
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources){
         displayUsername();
         inventoryStatus();
         sortby();
+        inventoryData();
     }
     public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
