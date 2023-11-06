@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class HelloController implements HelloControllerInterface {
+public class HelloController implements Initializable  {
     @FXML
     private Hyperlink id_forgot;
 
@@ -313,11 +315,24 @@ public class HelloController implements HelloControllerInterface {
                 rset = psmt.executeQuery();
                 //if username and password exists then login is successful
                 if (rset.next()) {
+                    //this will send the username to display in the dashboard
+                    data.username = id_username.getText();
+                    //Action after Login is successful
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information message");
                     alert.setHeaderText(null);
                     alert.setContentText("Login successful");
                     alert.showAndWait();
+                    //switch login form to the dashboard
+                    Parent root = FXMLLoader.load(getClass().getResource("maindesign.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setTitle("Bizbot Dashboard");
+                    stage.setMinWidth(1100);
+                    stage.setMinHeight(600);
+                    stage.setScene(scene);
+                    stage.show();
+                    id_loginBtn.getScene().getWindow().hide();
                 }
                 //if username and password does not exist then login is not successful
                 else {

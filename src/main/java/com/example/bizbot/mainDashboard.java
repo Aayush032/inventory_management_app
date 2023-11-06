@@ -103,6 +103,12 @@ public class mainDashboard implements Initializable {
 
     private String[] statusList = {"Available", "Unavailable"};
     private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};
+    //method to display the active username in the menu
+    public void displayUsername(){
+        String user = data.username;
+        user = user.substring(0,1).toUpperCase() + user.substring(1);
+        dash_username.setText(user);
+    }
     public void inventoryStatus(){
         //This is to add list items to the combo-box of the inventory section
         List<String> Inv_status = new ArrayList<>();
@@ -124,6 +130,7 @@ public class mainDashboard implements Initializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources){
+        displayUsername();
         inventoryStatus();
         sortby();
     }
