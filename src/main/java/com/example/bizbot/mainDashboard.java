@@ -10,15 +10,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +33,7 @@ public class mainDashboard implements Initializable {
     private Button btn_add;
 
     @FXML
-    private Button btn_cleaar;
+    private Button btn_clear;
 
     @FXML
     private Button btn_delete;
@@ -113,6 +117,7 @@ public class mainDashboard implements Initializable {
     private AnchorPane report_display;
     @FXML
     private Label dash_username;
+    private Image image;
     private Alert alert;
     private Connection connect;
     private PreparedStatement psmt;
@@ -170,6 +175,7 @@ public class mainDashboard implements Initializable {
         ObservableList SortData = FXCollections.observableArrayList(sort_by);
         combo_sortBy.setItems(SortData);
     }
+    //to merge all the data
     public ObservableList<productData> inventoryData(){
         ObservableList<productData> data_list = FXCollections.observableArrayList();
         String select_product_query = "select * from product";
@@ -192,6 +198,7 @@ public class mainDashboard implements Initializable {
         return data_list;
     }
     private ObservableList<productData> inventoryListData;
+    //To show data in our table
     public void inventoryShowData(){
         inventoryListData = inventoryData();
         column_pID.setCellValueFactory(new PropertyValueFactory<>("product_id"));
@@ -202,12 +209,88 @@ public class mainDashboard implements Initializable {
         column_date.setCellValueFactory(new PropertyValueFactory<>("date"));
         inventory_tableview.setItems(inventoryListData);
     }
+    //Action of add button in the inventory
+    public void inventoryAddBtn(){
+        if(text_pID.getText().isEmpty() || text_pName.getText().isEmpty() || text_price.getText().isEmpty() ||
+                text_stock.getText().isEmpty() || combo_status.getSelectionModel().getSelectedItem() == null || data.path == null){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all the blank fields");
+            alert.showAndWait();
+        }
+        else{
+            String check_prodId_query = "select product_id from product where product_id = '"+text_pID.getText()+"'";
+            connect = DatabaseConnectivity.connectDb();
+            try{
+                smt = connect.createStatement();
+                rset = smt.executeQuery(check_prodId_query);
+                if(rset.next()){
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error message");
+                    alert.setHeaderText(null);
+                    alert.setContentText(text_pID.getText()+" is already taken");
+                    alert.showAndWait();
+                }
+                else{
+                    String insert_data_query = "insert into product"+"(product_id, product_name, stock, status, price, image, date)"+
+                            "values (?,?,?,?,?,?,?)";
+                    psmt = connect.prepareStatement(insert_data_query);
+                    psmt.setString(1,text_pID.getText());
+                    psmt.setString(2,text_pName.getText());
+                    psmt.setString(3,text_stock.getText());
+                    psmt.setString(4,(String)combo_status.getSelectionModel().getSelectedItem());
+                    psmt.setString(5,text_price.getText());
+                    String path = data.path;
+                    path = path.replace("\\","\\\\");
+                    psmt.setString(6,path);
+                    LocalDateTime currentDate = LocalDateTime.now();
+                    psmt.setString(7, String.valueOf(currentDate));
+                    psmt.executeUpdate();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully added ");
+                    alert.showAndWait();
+                    inventoryShowData();
+                    inventoryClearBtn();
+
+                }
+            }
+            catch (Exception e){
+                System.out.println("Error :"+e);
+            }
+        }
+    }
+    //to clear the entered data after pressing the clear button
+    public void inventoryClearBtn(){
+        text_pID.setText("");
+        text_pName.setText("");
+        text_price.setText("");
+        text_stock.setText("");
+        data.path = "";
+        combo_status.getSelectionModel().clearSelection();
+        text_image.setImage(null);
+    }
+
+    //Action for import button in the inventory
+    public void inventoryImportBtn(){
+        FileChooser open_file_path = new FileChooser();
+        open_file_path.getExtensionFilters().add(new FileChooser.ExtensionFilter("Open Image file", "*png", "*jpg"));
+        File file = open_file_path.showOpenDialog(dashboard_form.getScene().getWindow());
+        if(file != null){
+            data.path = file.getAbsolutePath();
+            // here 180 is the desired width, 155 is the desired height, false is a boolean indicating whether to preserve the aspect ratio, true is a boolean indicating whether to enable smooth scaling
+            image = new Image(file.toURI().toString(), 165, 145, false, true );
+            text_image.setImage(image);
+        }
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources){
         displayUsername();
         inventoryStatus();
         sortby();
-        inventoryData();
+        inventoryShowData();
     }
     public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
