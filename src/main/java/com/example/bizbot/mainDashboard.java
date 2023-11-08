@@ -302,7 +302,7 @@ public class mainDashboard implements Initializable {
         image = new Image(path, 165, 145, false, true);
         text_image.setImage(image);
     }
-//Action for update button in the inventory section
+    //Action for update button in the inventory section
     public void inventoryUpdateBtn(){
         if(text_pID.getText().isEmpty() || text_pName.getText().isEmpty() || text_price.getText().isEmpty() ||
                 text_stock.getText().isEmpty() || combo_status.getSelectionModel().getSelectedItem() == null || data.path == null || data.id == 0){
