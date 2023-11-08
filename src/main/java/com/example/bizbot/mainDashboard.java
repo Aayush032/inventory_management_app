@@ -269,6 +269,7 @@ public class mainDashboard implements Initializable {
         text_price.setText("");
         text_stock.setText("");
         data.path = "";
+        data.id = 0;
         combo_status.getSelectionModel().clearSelection();
         text_image.setImage(null);
     }
@@ -285,6 +286,118 @@ public class mainDashboard implements Initializable {
             text_image.setImage(image);
         }
     }
+    //Action for selecting the data from the table
+    public void inventorySelectData(){
+        productData prodData = inventory_tableview.getSelectionModel().getSelectedItem();
+        int num = inventory_tableview.getSelectionModel().getSelectedIndex();
+        if((num-1)< -1  ) return;
+        text_pID.setText(prodData.getProduct_id());
+        text_pName.setText(prodData.getProduct_name());
+        text_price.setText(String.valueOf(prodData.getPrice()));
+        text_stock.setText(String.valueOf(prodData.getStock()));
+        data.path = prodData.getImage();
+        String path = prodData.getImage();
+        data.date = String.valueOf(prodData.getDate());
+        data.id = prodData.getId();
+        image = new Image(path, 165, 145, false, true);
+        text_image.setImage(image);
+    }
+//Action for update button in the inventory section
+    public void inventoryUpdateBtn(){
+        if(text_pID.getText().isEmpty() || text_pName.getText().isEmpty() || text_price.getText().isEmpty() ||
+                text_stock.getText().isEmpty() || combo_status.getSelectionModel().getSelectedItem() == null || data.path == null || data.id == 0){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all the blank fields");
+            alert.showAndWait();
+        }
+        else{
+            String path = data.path;
+            path = path.replace("\\", "\\\\");
+            String update_query = "update product set " + "product_id ='"+text_pID.getText()+
+                    "', product_name = '"+ text_pName.getText()+"', stock = '"+text_stock.getText()+
+                    "', price = '"+text_price.getText()+"', status = '"+combo_status.getSelectionModel().getSelectedItem()+
+                    "', image = '"+path+"', date = '"+data.date+"' where id = "+data.id;
+            connect = DatabaseConnectivity.connectDb();
+            try{
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to update Product ID:"+ text_pID.getText());
+                Optional<ButtonType> option = alert.showAndWait();
+                if(option.get().equals(ButtonType.OK)){
+                    psmt = connect.prepareStatement(update_query);
+                    psmt.executeUpdate();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Product updated successfully");
+                    alert.showAndWait();
+                    //To update the table view
+                    inventoryShowData();
+                    //to clear the fields
+                    inventoryClearBtn();
+                }
+                else{
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Product update cancelled");
+                    alert.showAndWait();
+                }
+
+
+            }
+            catch (Exception e){
+                System.out.println("Error:"+ e);
+            }
+        }
+    }
+    //action for delete button in the inventory
+    public void inventoryDeleteBtn(){
+        if(text_pID.getText().isEmpty() || text_pName.getText().isEmpty() || text_price.getText().isEmpty() ||
+                text_stock.getText().isEmpty() || combo_status.getSelectionModel().getSelectedItem() == null || data.path == null || data.id == 0){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all the blank fields");
+            alert.showAndWait();
+        }
+        else {
+            String delete_query = "delete from product where id = "+data.id;
+            try {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to delete Product ID:" + text_pID.getText());
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)) {
+                    psmt = connect.prepareStatement(delete_query);
+                    psmt.executeUpdate();
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Product deleted successfully");
+                    alert.showAndWait();
+                    inventoryShowData();
+                    inventoryClearBtn();
+                }
+                else{
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Product deletion cancelled");
+                    alert.showAndWait();
+
+                }
+            }
+            catch (Exception e){
+                System.out.println("Error:"+ e);
+            }
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources){
         displayUsername();
