@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -108,8 +109,6 @@ public class mainDashboard implements Initializable {
     @FXML
     private ComboBox<?> combo_status;
     @FXML
-    private ComboBox<?> combo_sortBy;
-    @FXML
     private AnchorPane order_display;
     @FXML
     private AnchorPane customer_display;
@@ -117,15 +116,51 @@ public class mainDashboard implements Initializable {
     private AnchorPane report_display;
     @FXML
     private Label dash_username;
+
+    @FXML
+    private TextField order_amount;
+
+    @FXML
+    private Label order_change;
+
+    @FXML
+    private TableColumn<?, ?> order_col_pname;
+
+    @FXML
+    private TableColumn<?, ?> order_col_price;
+
+    @FXML
+    private TableColumn<?, ?> order_col_quantity;
+
+    @FXML
+    private GridPane order_grid;
+
+    @FXML
+    private Button order_placeOrderbtn;
+
+    @FXML
+    private Button order_receiptBtn;
+
+    @FXML
+    private Button order_removeBtn;
+
+    @FXML
+    private ScrollPane order_scroll;
+
+    @FXML
+    private TableView<?> order_tableview;
+
+    @FXML
+    private Label order_total;
     private Image image;
     private Alert alert;
     private Connection connect;
     private PreparedStatement psmt;
     private Statement smt;
     private ResultSet rset;
+    private ObservableList<productData> card_list_data = FXCollections.observableArrayList();
 
     private String[] statusList = {"Available", "Unavailable"};
-    private String[] sortbyList = {"Alphabet", "Order-Date", "Location"};
     //method to display the active username in the menu
     public void displayUsername(){
         String user = data.username;
@@ -165,15 +200,6 @@ public class mainDashboard implements Initializable {
         ObservableList listData = FXCollections.observableArrayList(Inv_status);
         combo_status.setItems(listData);
 
-    }
-    public void sortby(){
-        //this is to add list to the combo-box of the order section
-        List<String> sort_by = new ArrayList<>();
-        for(String data: sortbyList){
-            sort_by.add(data);
-        }
-        ObservableList SortData = FXCollections.observableArrayList(sort_by);
-        combo_sortBy.setItems(SortData);
     }
     //to merge all the data
     public ObservableList<productData> inventoryData(){
@@ -397,13 +423,59 @@ public class mainDashboard implements Initializable {
             }
         }
     }
+    //Order section
+    public ObservableList<productData> orderGetData(){
+        String get_card_query = "select * from product";
+        ObservableList<productData> listData = FXCollections.observableArrayList();
+        connect = DatabaseConnectivity.connectDb();
+        try{
+            psmt = connect.prepareStatement(get_card_query);
+            rset = psmt.executeQuery();
+            productData prod;
+            while(rset.next()){
+                prod = new productData(rset.getInt("id"), rset.getString("product_id"),
+                        rset.getString("product_name"), rset.getDouble("price"),
+                        rset.getString("image"));
+                listData.add(prod);
+            }
+        }
+        catch (Exception e){
+            System.out.println("error:"+e);
+        }
+        return listData;
+    }
+    public void orderDisplayCard(){
+        card_list_data.clear();
+        card_list_data.addAll(orderGetData());
+        int row = 0;
+        int column = 0;
+        order_grid.getColumnConstraints().clear();
+        order_grid.getColumnConstraints().clear();
+        for(int q = 0; q<card_list_data.size(); q++){
+            try{
+                FXMLLoader load = new FXMLLoader();
+                load.setLocation(getClass().getResource("CardProduct.fxml"));
+                AnchorPane pane = load.load();
+                CardProductController cardC = load.getController();
+                cardC.setData(card_list_data.get(q));
+                if(column == 3){
+                    column = 0;
+                    row+=1;
+                }
+                order_grid.add(pane,column++,row);
+            }
+            catch (Exception e){
+                System.out.println("Error:"+ e);
+            }
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
         displayUsername();
         inventoryStatus();
-        sortby();
         inventoryShowData();
+        orderDisplayCard();
     }
     public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
