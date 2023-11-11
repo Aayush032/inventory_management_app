@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -449,6 +450,7 @@ public class mainDashboard implements Initializable {
         card_list_data.addAll(orderGetData());
         int row = 0;
         int column = 0;
+        order_grid.getChildren().clear();
         order_grid.getColumnConstraints().clear();
         order_grid.getColumnConstraints().clear();
         for(int q = 0; q<card_list_data.size(); q++){
@@ -463,6 +465,7 @@ public class mainDashboard implements Initializable {
                     row+=1;
                 }
                 order_grid.add(pane,column++,row);
+                GridPane.setMargin(pane, new Insets(10));
             }
             catch (Exception e){
                 System.out.println("Error:"+ e);
@@ -508,6 +511,7 @@ public class mainDashboard implements Initializable {
             dashboard_display.setVisible(false);
             customer_display.setVisible(false);
             report_display.setVisible(false);
+            orderDisplayCard();
         }
     }
     public void switchToCustomer(ActionEvent event){
