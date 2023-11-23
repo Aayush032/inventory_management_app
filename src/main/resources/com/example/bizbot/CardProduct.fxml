@@ -21,6 +21,9 @@
                      <font>
                         <Font name="Monotype Corsiva" size="20.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
                   </Label>
                   <Label fx:id="card_price" prefHeight="26.0" prefWidth="72.0" text="Rs. 0.0">
                      <font>
@@ -41,7 +44,7 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Spinner>
-                  <Button fx:id="card_addBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="57.0" styleClass="card_btn" stylesheets="@CardDesign.css" text="Add">
+                  <Button fx:id="card_addBtn" mnemonicParsing="false" onAction="#addBtn" prefHeight="31.0" prefWidth="57.0" styleClass="card_btn" stylesheets="@CardDesign.css" text="Add">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>

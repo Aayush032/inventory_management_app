@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -46,32 +47,32 @@
                               </Label>
                            </children>
                         </AnchorPane>
-                        <Button fx:id="id_dashboard" layoutY="113.0" mnemonicParsing="false" onAction="#switchToDashboard" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Dashboard">
+                        <Button fx:id="id_dashboard" layoutY="113.0" mnemonicParsing="false" onAction="#switchToDashboard" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Dashboard" textFill="WHITE">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_customer" layoutY="250.0" mnemonicParsing="false" onAction="#switchToCustomer" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Customers">
+                        <Button fx:id="id_customer" layoutY="250.0" mnemonicParsing="false" onAction="#switchToCustomer" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Customers" textFill="WHITE">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_order" layoutY="205.0" mnemonicParsing="false" onAction="#switchToOrderList" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Orders">
+                        <Button fx:id="id_order" layoutY="205.0" mnemonicParsing="false" onAction="#switchToOrderList" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Orders" textFill="WHITE">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_inventory" layoutY="158.0" mnemonicParsing="false" onAction="#switchToInventory" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Inventory">
+                        <Button fx:id="id_inventory" layoutY="158.0" mnemonicParsing="false" onAction="#switchToInventory" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Inventory" textFill="WHITE">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_report" layoutY="297.0" mnemonicParsing="false" onAction="#switchToReport" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Reports">
+                        <Button fx:id="id_report" layoutY="297.0" mnemonicParsing="false" onAction="#switchToReport" prefHeight="45.0" prefWidth="200.0" styleClass="nav-btn" stylesheets="@maindesign.css" text="Reports" textFill="WHITE">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_signout" layoutY="554.0" mnemonicParsing="false" onAction="#signOutBtn" prefHeight="45.0" prefWidth="200.0" styleClass="sign-out" stylesheets="@maindesign.css" text="Sign Out">
+                        <Button fx:id="id_signout" layoutY="554.0" mnemonicParsing="false" onAction="#signOutBtn" prefHeight="45.0" prefWidth="200.0" styleClass="sign-out" stylesheets="@maindesign.css" text="Sign Out" AnchorPane.bottomAnchor="0.3999999999999986">
                            <font>
                               <Font name="Monotype Corsiva" size="18.0" />
                            </font>
@@ -79,7 +80,7 @@
                         <FontAwesomeIconView fill="WHITE" glyphName="HOME" layoutX="37.0" layoutY="142.0" size="20" />
                         <FontAwesomeIconView fill="WHITE" glyphName="USERS" layoutX="35.0" layoutY="279.0" size="20" />
                         <FontAwesomeIconView fill="WHITE" glyphName="BELL" layoutX="36.0" layoutY="234.0" size="20" />
-                        <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" layoutX="36.0" layoutY="583.0" size="20" />
+                        <FontAwesomeIconView fill="WHITE" glyphName="SIGN_OUT" layoutX="36.0" layoutY="583.0" size="20" AnchorPane.bottomAnchor="14.14285659790039" />
                         <FontAwesomeIconView fill="WHITE" glyphName="FILE" layoutX="40.0" layoutY="324.0" size="20" />
                         <FontAwesomeIconView fill="WHITE" glyphName="SHOPPING_CART" layoutX="36.0" layoutY="189.0" size="20" text="" />
                         <Label layoutX="9.0" layoutY="74.0" text="Welcome,">
@@ -87,10 +88,13 @@
                               <Font name="Monotype Corsiva" size="26.0" />
                            </font>
                         </Label>
-                        <Label fx:id="dash_username" layoutX="104.0" layoutY="74.0">
+                        <Label fx:id="dash_username" layoutX="104.0" layoutY="74.0" textFill="#fcfcfc">
                            <font>
                               <Font name="Monotype Corsiva" size="26.0" />
                            </font>
+                           <effect>
+                              <Bloom />
+                           </effect>
                         </Label>
                      </children>
                   </AnchorPane>
@@ -170,14 +174,14 @@
                                  </font>
                               </Label>
                               <FontAwesomeIconView fill="WHITE" glyphName="PLUS" layoutX="458.0" layoutY="86.0" size="20" wrappingWidth="15.249987602233887" />
-                              <AnchorPane layoutX="20.0" layoutY="57.0" prefHeight="535.0" prefWidth="565.0" stylesheets="@maindesign.css">
+                              <AnchorPane layoutX="20.0" layoutY="57.0" prefHeight="535.0" prefWidth="565.0" stylesheets="@maindesign.css" AnchorPane.bottomAnchor="7.7999999999999545" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="314.4" AnchorPane.topAnchor="57.0">
                                  <styleClass>
                                     <String fx:value="white-bg" />
                                     <String fx:value="radius" />
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <ScrollPane fx:id="order_scroll" layoutX="10.0" layoutY="11.0" prefHeight="510.0" prefWidth="540.0">
+                                    <ScrollPane fx:id="order_scroll" layoutX="10.0" layoutY="11.0" prefHeight="510.0" prefWidth="540.0" AnchorPane.bottomAnchor="13.800000000000068" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="15.600000000000023" AnchorPane.topAnchor="11.0">
                                        <content>
                                           <GridPane fx:id="order_grid" prefHeight="14.0" prefWidth="100.0">
                                             <columnConstraints>
@@ -188,49 +192,49 @@
                                     </ScrollPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutX="600.0" layoutY="57.0" prefHeight="535.0" prefWidth="290.0" stylesheets="@maindesign.css">
+                              <AnchorPane layoutX="600.0" layoutY="57.0" prefHeight="535.0" prefWidth="290.0" stylesheets="@maindesign.css" AnchorPane.bottomAnchor="7.7999999999999545" AnchorPane.rightAnchor="9.600000000000023" AnchorPane.topAnchor="57.0">
                                  <styleClass>
                                     <String fx:value="white-bg" />
                                     <String fx:value="radius" />
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="order_tableview" editable="true" layoutX="7.0" layoutY="14.0" prefHeight="250.0" prefWidth="277.0">
+                                    <TableView fx:id="order_tableview" editable="true" layoutX="7.0" layoutY="14.0" prefHeight="250.0" prefWidth="277.0" AnchorPane.bottomAnchor="270.80000000000007" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="5.7999999999999545" AnchorPane.topAnchor="14.0">
                                       <columns>
                                         <TableColumn fx:id="order_col_pname" prefWidth="127.199951171875" text="Product Name" />
                                         <TableColumn fx:id="order_col_quantity" prefWidth="73.5999755859375" text="Quantity" />
                                           <TableColumn fx:id="order_col_price" prefWidth="75.199951171875" text="Price" />
                                       </columns>
                                     </TableView>
-                                    <Label layoutX="44.0" layoutY="275.0" text="Total:">
+                                    <Label layoutX="44.0" layoutY="273.0" text="Total:" AnchorPane.bottomAnchor="235.60000000000005" AnchorPane.rightAnchor="203.2">
                                        <font>
                                           <Font name="Monotype Corsiva" size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="order_total" layoutX="122.0" layoutY="276.0" text="Rs. 0.0">
+                                    <Label fx:id="order_total" layoutX="122.0" layoutY="274.0" text="Rs. 0.0" AnchorPane.bottomAnchor="235.60000000000002" AnchorPane.rightAnchor="122.79999999999998">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="35.0" layoutY="312.0" text="Amount:">
+                                    <Label layoutX="44.0" layoutY="312.0" text="Amount:" AnchorPane.bottomAnchor="196.80000000000007" AnchorPane.rightAnchor="183.2">
                                        <font>
                                           <Font name="Monotype Corsiva" size="20.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="order_amount" layoutX="122.0" layoutY="312.0" prefHeight="26.0" prefWidth="115.0" styleClass="text_field" stylesheets="@loginui.css" />
-                                    <Label layoutX="38.0" layoutY="350.0" text="Change:">
+                                    <TextField fx:id="order_amount" layoutX="122.0" layoutY="312.0" prefHeight="26.0" prefWidth="115.0" styleClass="text_field" stylesheets="@loginui.css" AnchorPane.bottomAnchor="196.80000000000004" AnchorPane.rightAnchor="53.199999999999974" />
+                                    <Label layoutX="38.0" layoutY="350.0" text="Change:" AnchorPane.bottomAnchor="158.80000000000004" AnchorPane.rightAnchor="195.59999999999997">
                                        <font>
                                           <Font name="Monotype Corsiva" size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="order_change" layoutX="123.0" layoutY="351.0" text="Rs. 0.0">
+                                    <Label fx:id="order_change" layoutX="122.0" layoutY="350.0" text="Rs. 0.0" AnchorPane.bottomAnchor="159.60000000000002" AnchorPane.rightAnchor="122.79999999999998">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="order_placeOrderbtn" layoutX="87.0" layoutY="397.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Place Order" />
-                                    <Button fx:id="order_removeBtn" layoutX="14.0" layoutY="454.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Remove" />
-                                    <Button fx:id="order_receiptBtn" layoutX="160.0" layoutY="454.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Receipt" />
+                                    <Button fx:id="order_placeOrderbtn" layoutX="87.0" layoutY="397.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Place Order" AnchorPane.bottomAnchor="98.20000000000005" AnchorPane.leftAnchor="87.0" AnchorPane.rightAnchor="88.19999999999997" />
+                                    <Button fx:id="order_removeBtn" layoutX="18.0" layoutY="454.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Remove" AnchorPane.bottomAnchor="41.200000000000045" AnchorPane.leftAnchor="18.0" />
+                                    <Button fx:id="order_receiptBtn" layoutX="144.0" layoutY="454.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="inventory_btn" stylesheets="@maindesign.css" text="Receipt" AnchorPane.bottomAnchor="41.200000000000045" AnchorPane.leftAnchor="144.0" />
                                  </children>
                               </AnchorPane>
                            </children>

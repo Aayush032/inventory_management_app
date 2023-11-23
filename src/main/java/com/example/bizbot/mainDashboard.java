@@ -436,7 +436,7 @@ public class mainDashboard implements Initializable {
             while(rset.next()){
                 prod = new productData(rset.getInt("id"), rset.getString("product_id"),
                         rset.getString("product_name"), rset.getDouble("price"),
-                        rset.getString("image"));
+                        rset.getString("image"), rset.getDate("date"));
                 listData.add(prod);
             }
         }
@@ -460,16 +460,44 @@ public class mainDashboard implements Initializable {
                 AnchorPane pane = load.load();
                 CardProductController cardC = load.getController();
                 cardC.setData(card_list_data.get(q));
-                if(column == 3){
+                if(column == 4){
                     column = 0;
                     row+=1;
                 }
                 order_grid.add(pane,column++,row);
-                GridPane.setMargin(pane, new Insets(10));
+                GridPane.setMargin(pane, new Insets(5));
             }
             catch (Exception e){
                 System.out.println("Error:"+ e);
             }
+        }
+    }
+    private int cId;
+    public void customerID(){
+        String sql_query = "select max(customer_id) from customer";
+        connect = DatabaseConnectivity.connectDb();
+        try{
+            psmt = connect.prepareStatement(sql_query);
+            rset = psmt.executeQuery();
+            if(rset.next()){
+                cId = rset.getInt("max(customer_id)");
+            }
+            String checkCId = "select max(customer_id) from receipt";
+            psmt = connect.prepareStatement(checkCId);
+            rset = psmt.executeQuery();
+            int checkId = 0;
+            if(rset.next()){
+                checkId = rset.getInt("max(customer_id)");
+            }
+            if(checkId == 0){
+                cId+= 1;
+            } else if (cId == checkId) {
+                cId+=1;
+            }
+            data.cID = cId;
+        }
+        catch (Exception e){
+            System.out.println("Error:"+ e);
         }
     }
 
