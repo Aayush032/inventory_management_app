@@ -11,6 +11,7 @@ public class productData {
     private String image;
     private Date date;
     private Integer stock;
+    private Integer quantity;
     public  productData(Integer id, String product_id, String product_name,
                         Double price, String status, String image, Date date, Integer stock){
         this.id = id;
@@ -22,13 +23,21 @@ public class productData {
         this.date = date;
         this.stock = stock;
     }
-    public productData(Integer id, String product_id, String product_name, Double price, String image, Date date){
+    public productData(Integer id, String product_id, String product_name,Integer quantity, Double price, String image, Date date){
         this.id = id;
         this.product_id = product_id;
         this.product_name = product_name;
         this.price = price;
         this.image = image;
         this.date = date;
+    }
+    public productData(Integer id, String product_id, String product_name, Integer quantity, Double price, Date date){
+        this.id = id;
+        this.product_id = product_id;
+        this.product_name = product_name;
+        this.price = price;
+        this.date = date;
+        this.quantity = quantity;
     }
     public Integer getId(){
         return id;
@@ -60,5 +69,9 @@ public class productData {
 
     public Integer getStock() {
         return stock;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 }

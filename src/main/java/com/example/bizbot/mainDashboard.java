@@ -125,13 +125,13 @@ public class mainDashboard implements Initializable {
     private Label order_change;
 
     @FXML
-    private TableColumn<?, ?> order_col_pname;
+    private TableColumn<productData, String> order_col_pname;
 
     @FXML
-    private TableColumn<?, ?> order_col_price;
+    private TableColumn<productData, String> order_col_price;
 
     @FXML
-    private TableColumn<?, ?> order_col_quantity;
+    private TableColumn<productData, String> order_col_quantity;
 
     @FXML
     private GridPane order_grid;
@@ -149,7 +149,7 @@ public class mainDashboard implements Initializable {
     private ScrollPane order_scroll;
 
     @FXML
-    private TableView<?> order_tableview;
+    private TableView<productData> order_tableview;
 
     @FXML
     private Label order_total;
@@ -212,10 +212,14 @@ public class mainDashboard implements Initializable {
             rset = psmt.executeQuery();
             productData prod_data;
             while(rset.next()){
-                prod_data = new productData(rset.getInt("id"), rset.getString("product_id"),
-                        rset.getString("product_name"), rset.getDouble("price"),
-                        rset.getString("status"), rset.getString("image"),
-                        rset.getDate("date"),rset.getInt("stock"));
+                prod_data = new productData(rset.getInt("id"),
+                        rset.getString("product_id"),
+                        rset.getString("product_name"),
+                        rset.getDouble("price"),
+                        rset.getString("status"),
+                        rset.getString("image"),
+                        rset.getDate("date"),
+                        rset.getInt("stock"));
                 data_list.add(prod_data);
             }
         }
@@ -434,9 +438,13 @@ public class mainDashboard implements Initializable {
             rset = psmt.executeQuery();
             productData prod;
             while(rset.next()){
-                prod = new productData(rset.getInt("id"), rset.getString("product_id"),
-                        rset.getString("product_name"), rset.getDouble("price"),
-                        rset.getString("image"), rset.getDate("date"));
+                prod = new productData(rset.getInt("id"),
+                        rset.getString("product_id"),
+                        rset.getString("product_name"),
+                        rset.getInt("stock"),
+                        rset.getDouble("price"),
+                        rset.getString("image"),
+                        rset.getDate("date"));
                 listData.add(prod);
             }
         }
@@ -453,26 +461,57 @@ public class mainDashboard implements Initializable {
         order_grid.getChildren().clear();
         order_grid.getColumnConstraints().clear();
         order_grid.getColumnConstraints().clear();
-        for(int q = 0; q<card_list_data.size(); q++){
-            try{
+        for (productData cardListDatum : card_list_data) {
+            try {
                 FXMLLoader load = new FXMLLoader();
                 load.setLocation(getClass().getResource("CardProduct.fxml"));
                 AnchorPane pane = load.load();
                 CardProductController cardC = load.getController();
-                cardC.setData(card_list_data.get(q));
-                if(column == 4){
+                cardC.setData(cardListDatum);
+                if (column == 4) {
                     column = 0;
-                    row+=1;
+                    row += 1;
                 }
-                order_grid.add(pane,column++,row);
+                order_grid.add(pane, column++, row);
                 GridPane.setMargin(pane, new Insets(5));
-            }
-            catch (Exception e){
-                System.out.println("Error:"+ e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
+    public ObservableList<productData> orderGetDisplay(){
+        ObservableList<productData> order_list_data = FXCollections.observableArrayList();
+        String order_query = "select * from customer";
+        connect = DatabaseConnectivity.connectDb();
+        try{
+            psmt = connect.prepareStatement(order_query);
+            rset = psmt.executeQuery();
+            productData prod;
+            while (rset.next()){
+                prod = new productData(rset.getInt("id"),
+                        rset.getString("product_id"),
+                        rset.getString("product_name"),
+                        rset.getInt("quantity"),
+                        rset.getDouble("price"),
+                        rset.getDate("date"));
+                order_list_data.add(prod);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return order_list_data;
+    }
+    private ObservableList<productData> order_data;
+    public void orderDisplayData(){
+        order_data = orderGetDisplay();
+        order_col_pname.setCellValueFactory(new PropertyValueFactory<>("product_name"));
+        order_col_quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        order_col_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        order_tableview.setItems(order_data);
+    }
     private int cId;
+    // Function to generate unique customer id
     public void customerID(){
         String sql_query = "select max(customer_id) from customer";
         connect = DatabaseConnectivity.connectDb();
@@ -489,7 +528,7 @@ public class mainDashboard implements Initializable {
             if(rset.next()){
                 checkId = rset.getInt("max(customer_id)");
             }
-            if(checkId == 0){
+            if(cId == 0){
                 cId+= 1;
             } else if (cId == checkId) {
                 cId+=1;
@@ -497,7 +536,51 @@ public class mainDashboard implements Initializable {
             data.cID = cId;
         }
         catch (Exception e){
-            System.out.println("Error:"+ e);
+           e.printStackTrace();
+        }
+    }
+    private double totalP;
+    public void orderGetTotal(){
+        customerID();
+        String total_query = "select SUM(price) from customer where customer_id = "+ cId;
+        connect = DatabaseConnectivity.connectDb();
+        try{
+            psmt = connect.prepareStatement(total_query);
+            rset = psmt.executeQuery();
+            if(rset.next()){
+                totalP = rset.getDouble("SUM(price)");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void orderDisplayTotal(){
+        orderGetTotal();
+        order_total.setText("Rs."+ totalP);
+    }
+    private double amount;
+    private double change;
+    public void orderTotalAmount(){
+        orderGetTotal();
+        if(order_amount.getText().isEmpty() || totalP == 0){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid request!");
+            alert.showAndWait();
+        }
+        else{
+            //type conversion
+            amount = Double.parseDouble(order_amount.getText());
+            change = 0;
+            if(amount < totalP){
+                order_amount.setText("");
+            }
+            else{
+                change = amount - totalP;
+                order_change.setText("Rs."+change);
+            }
         }
     }
 
@@ -507,6 +590,10 @@ public class mainDashboard implements Initializable {
         inventoryStatus();
         inventoryShowData();
         orderDisplayCard();
+        inventoryData();
+        orderGetDisplay();
+        orderDisplayTotal();
+        orderDisplayData();
     }
     public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
@@ -528,6 +615,8 @@ public class mainDashboard implements Initializable {
             order_display.setVisible(false);
             customer_display.setVisible(false);
             report_display.setVisible(false);
+            inventoryData();
+            inventoryShowData();
         }
     }
     public void switchToOrderList(ActionEvent event){
@@ -540,6 +629,9 @@ public class mainDashboard implements Initializable {
             customer_display.setVisible(false);
             report_display.setVisible(false);
             orderDisplayCard();
+            orderGetDisplay();
+            orderDisplayTotal();
+            orderDisplayData();
         }
     }
     public void switchToCustomer(ActionEvent event){

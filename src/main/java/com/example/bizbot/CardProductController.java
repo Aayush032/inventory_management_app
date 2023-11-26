@@ -36,7 +36,6 @@ public class CardProductController implements Initializable {
     private Spinner<Integer> card_spinner;
     private productData prodData;
     private Image image;
-    private String prodId;
     private String prod_image;
     private String prod_date;
     private Connection connect;
@@ -76,12 +75,30 @@ public class CardProductController implements Initializable {
                 + prod_id+ "'";
         connect = DatabaseConnectivity.connectDb();
         try{
+            int check_stock = 0;
+            String check_stock_query = "select stock from product where product_id='"
+                    +prod_id+"'";
+            psmt = connect.prepareStatement(check_stock_query);
+            rset = psmt.executeQuery();
+            if(rset.next()){
+                check_stock = rset.getInt("stock");
+            }
+            if(check_stock == 0){
+                // Update product information to mark it as unavailable with zero stock.
+                String update_stock_query = "update product set product_name = '"
+                        +card_pname.getText()+"',price = "+pr
+                        +", status = 'Unavailable'"+" ,stock = 0"+", date = '" +prod_date+"', image = '"+
+                        prod_image+"' where product_id = '"+prod_id+"'" ;
+                psmt = connect.prepareStatement(update_stock_query);
+                psmt.executeUpdate();
+            }
             psmt = connect.prepareStatement(check_available_query);
             rset = psmt.executeQuery();
             if(rset.next()){
                 check = rset.getString("status");
             }
             if(!Objects.equals(check, "Available") || quantity == 0){
+                //Show an error alert for un-availability
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error message");
                 alert.setHeaderText(null);
@@ -89,15 +106,8 @@ public class CardProductController implements Initializable {
                 alert.showAndWait();
             }
             else{
-                int check_stock = 0;
-                String check_stock_query = "select stock from product where product_id='"
-                        +prod_id+"'";
-                psmt = connect.prepareStatement(check_stock_query);
-                rset = psmt.executeQuery();
-                if(rset.next()){
-                    check_stock = rset.getInt("stock");
-                }
                 if(check_stock< quantity){
+                    // Show an error alert indicating insufficient stock.
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error message");
                     alert.setHeaderText(null);
@@ -106,17 +116,18 @@ public class CardProductController implements Initializable {
                 }
                 else{
                     String insert_query = "insert into customer"+
-                            "(customer_id,product_name,quantity, price, date, em_username) "
-                            +"values(?,?,?,?,?,?)";
+                            "(customer_id,product_id,product_name,quantity, price, date, em_username) "
+                            +"values(?,?,?,?,?,?,?)";
                     psmt = connect.prepareStatement(insert_query);
                     psmt.setString(1, String.valueOf(data.cID));
-                    psmt.setString(2,card_pname.getText());
-                    psmt.setString(3,String.valueOf(quantity));
+                    psmt.setString(2,prod_id);
+                    psmt.setString(3,card_pname.getText());
+                    psmt.setString(4,String.valueOf(quantity));
                     totalP = quantity * pr;
-                    psmt.setString(4,String.valueOf(totalP));
+                    psmt.setString(5,String.valueOf(totalP));
                     LocalDateTime currentDate = LocalDateTime.now();
-                    psmt.setString(5,String.valueOf(currentDate));
-                    psmt.setString(6,data.username);
+                    psmt.setString(6,String.valueOf(currentDate));
+                    psmt.setString(7,data.username);
                     psmt.executeUpdate();
                     int updated_stock = check_stock-quantity;
                     prod_image = prod_image.replace("\\", "\\\\");
@@ -131,12 +142,13 @@ public class CardProductController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully added");
                     alert.showAndWait();
+                    mform.orderGetTotal();
                 }
 
             }
         }
         catch (Exception e){
-            System.out.println("Error:"+ e);
+            e.printStackTrace();
         }
     }
 

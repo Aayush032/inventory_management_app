@@ -221,7 +221,7 @@
                                           <Font name="Monotype Corsiva" size="20.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="order_amount" layoutX="122.0" layoutY="312.0" prefHeight="26.0" prefWidth="115.0" styleClass="text_field" stylesheets="@loginui.css" AnchorPane.bottomAnchor="196.80000000000004" AnchorPane.rightAnchor="53.199999999999974" />
+                                    <TextField fx:id="order_amount" layoutX="122.0" layoutY="312.0" onAction="#orderTotalAmount" prefHeight="26.0" prefWidth="115.0" styleClass="text_field" stylesheets="@loginui.css" AnchorPane.bottomAnchor="196.80000000000004" AnchorPane.rightAnchor="53.199999999999974" />
                                     <Label layoutX="38.0" layoutY="350.0" text="Change:" AnchorPane.bottomAnchor="158.80000000000004" AnchorPane.rightAnchor="195.59999999999997">
                                        <font>
                                           <Font name="Monotype Corsiva" size="20.0" />
