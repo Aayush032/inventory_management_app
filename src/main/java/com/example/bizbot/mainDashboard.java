@@ -153,6 +153,20 @@ public class mainDashboard implements Initializable {
 
     @FXML
     private Label order_total;
+
+    @FXML
+    private TableColumn<?, ?> customer_col_cid;
+
+    @FXML
+    private TableColumn<?, ?> customer_col_date;
+
+    @FXML
+    private TableColumn<?, ?> customer_col_emp;
+
+    @FXML
+    private TableColumn<?, ?> customer_col_total;
+    @FXML
+    private TableView<?> customer_tableview;
     private Image image;
     private Alert alert;
     private Connection connect;
@@ -480,8 +494,9 @@ public class mainDashboard implements Initializable {
         }
     }
     public ObservableList<productData> orderGetDisplay(){
+        customerID();
         ObservableList<productData> order_list_data = FXCollections.observableArrayList();
-        String order_query = "select * from customer";
+        String order_query = "select * from customer where customer_id = "+ cId;
         connect = DatabaseConnectivity.connectDb();
         try{
             psmt = connect.prepareStatement(order_query);
@@ -509,6 +524,14 @@ public class mainDashboard implements Initializable {
         order_col_quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         order_col_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         order_tableview.setItems(order_data);
+    }
+    private  int get_id;
+    public void orderSelect(){
+        productData prod = order_tableview.getSelectionModel().getSelectedItem();
+        int num = order_tableview.getSelectionModel().getSelectedIndex();
+        if((num-1)< -1) return;
+        //to get id per order
+        get_id = prod.getId();
     }
     private int cId;
     // Function to generate unique customer id
@@ -582,6 +605,101 @@ public class mainDashboard implements Initializable {
                 order_change.setText("Rs."+change);
             }
         }
+    }
+    public void placeOrderBtn(){
+        if(totalP == 0){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid request!");
+            alert.showAndWait();
+        }
+        else{
+            orderGetTotal();
+            String place_order_query = "insert into receipt (customer_id, total, date, em_username) "
+                    + "values(?,?,?,?)";
+            connect = DatabaseConnectivity.connectDb();
+            try{
+                if(amount == 0){
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Invalid request!");
+                    alert.showAndWait();
+                }
+                else{
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Are you sure?");
+                    Optional<ButtonType> option = alert.showAndWait();
+                    if(option.get().equals(ButtonType.OK)){
+
+                        customerID();
+                        orderGetTotal();
+                        psmt = connect.prepareStatement(place_order_query);
+                        psmt.setString(1,String.valueOf(cId));
+                        psmt.setString(2,String.valueOf(totalP));
+                        LocalDateTime currentDate = LocalDateTime.now();
+                        psmt.setString(3,String.valueOf(currentDate));
+                        psmt.setString(4,data.username);
+                        psmt.executeUpdate();
+                        alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Information message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Successful");
+                        alert.showAndWait();
+                        orderDisplayData();
+                        orderRestart();
+                    }else{
+                        alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Error message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Cancelled");
+                        alert.showAndWait();
+                    }
+                }
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    public void orderRestart(){
+        amount = 0;
+        totalP = 0;
+        change = 0;
+        order_amount.setText("");
+        order_change.setText("Rs. 0.0");
+        order_total.setText("Rs. 0.0");
+    }
+    public void orderRemoveBtn(){
+            if(get_id == 0){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid request");
+                alert.showAndWait();
+            }else {
+                String delete_order_query = "delete from customer where id = "+ get_id;
+                connect = DatabaseConnectivity.connectDb();
+                try{
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Are you sure you want to remove this order?");
+                    Optional<ButtonType> option = alert.showAndWait();
+                    if(option.get().equals(ButtonType.OK)){
+                        psmt = connect.prepareStatement(delete_order_query);
+                        psmt.executeUpdate();
+                    }
+                    orderDisplayData();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
     }
 
     @Override
