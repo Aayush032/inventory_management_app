@@ -155,18 +155,18 @@ public class mainDashboard implements Initializable {
     private Label order_total;
 
     @FXML
-    private TableColumn<?, ?> customer_col_cid;
+    private TableColumn<CustomerData, String> customer_col_cid;
 
     @FXML
-    private TableColumn<?, ?> customer_col_date;
+    private TableColumn<CustomerData, String> customer_col_date;
 
     @FXML
-    private TableColumn<?, ?> customer_col_emp;
+    private TableColumn<CustomerData, String> customer_col_emp;
 
     @FXML
-    private TableColumn<?, ?> customer_col_total;
+    private TableColumn<CustomerData, String> customer_col_total;
     @FXML
-    private TableView<?> customer_tableview;
+    private TableView<CustomerData> customer_tableview;
     private Image image;
     private Alert alert;
     private Connection connect;
@@ -701,7 +701,36 @@ public class mainDashboard implements Initializable {
                 }
             }
     }
-
+// Customer section
+    public ObservableList<CustomerData> customerDataList(){
+        ObservableList<CustomerData> customer_list_data = FXCollections.observableArrayList();
+        String customer_query = "select * from receipt ";
+        connect = DatabaseConnectivity.connectDb();
+        try{
+            psmt = connect.prepareStatement(customer_query);
+            rset = psmt.executeQuery();
+            CustomerData cData;
+            while (rset.next()){
+                cData = new CustomerData(rset.getInt("id"), rset.getInt("customer_id"),
+                        rset.getDouble("total"), rset.getDate("date"),
+                        rset.getString("em_username"));
+                customer_list_data.add(cData);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return customer_list_data;
+    }
+    private ObservableList<CustomerData> customer_data;
+    public void customerDisplayData(){
+        customer_data = customerDataList();
+        customer_col_cid.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
+        customer_col_total.setCellValueFactory(new PropertyValueFactory<>("total"));
+        customer_col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        customer_col_emp.setCellValueFactory(new PropertyValueFactory<>("em_username"));
+        customer_tableview.setItems(customer_data);
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources){
         displayUsername();
@@ -712,6 +741,7 @@ public class mainDashboard implements Initializable {
         orderGetDisplay();
         orderDisplayTotal();
         orderDisplayData();
+        customerDisplayData();
     }
     public void switchToDashboard(ActionEvent event){
         //this is to switch from inventory to dashboard page
@@ -758,6 +788,7 @@ public class mainDashboard implements Initializable {
         inventory_display.setVisible(false);
         dashboard_display.setVisible(false);
         report_display.setVisible(false);
+        customerDisplayData();
     }
     public void switchToReport(ActionEvent event){
         report_display.setVisible(true);
